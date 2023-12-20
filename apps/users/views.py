@@ -84,6 +84,39 @@ class UserViewSet(BaseGenericViewSet):
             data=password_serializer.errors, status=self.status.HTTP_400_BAD_REQUEST
         )
 
+    @action(detail=False, methods=["post"])
+    def send_mail(self, request):
+        from apps.base.helpers.mailer import send_mail_helper
+
+        send_mail_helper("prueba", "mensaje de prueba")
+        return self.response({"message": "ok"}, self.status.HTTP_200_OK)
+
+    @action(detail=False, methods=["post"])
+    def create_file(self, request):
+        file_serializer = serializers.FileCreateSerializer(data=request.data)
+        if file_serializer.is_valid():
+            from apps.base.helpers.aws_s3 import upload_file
+
+            uploaded = upload_file(file_serializer.validated_data.get("file"))
+            if uploaded:
+                return self.response({"message": "ok"}, self.status.HTTP_200_OK)
+            return self.response({"message": "nook"}, self.status.HTTP_200_OK)
+        return self.response({"message": "nook"}, self.status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"])
+    def get_file(self, request):
+        file_serializer = serializers.FileGetSerializer(data=request.query_params)
+        if file_serializer.is_valid():
+            from apps.base.helpers.aws_s3 import create_presigned_url
+
+            url = create_presigned_url(
+                file_serializer.validated_data.get("object_name")
+            )
+            if url:
+                return self.response({"url": url}, self.status.HTTP_200_OK)
+            return self.response({"message": "nook url"}, self.status.HTTP_200_OK)
+        return self.response({"message": "nook pe"}, self.status.HTTP_200_OK)
+
     def destroy(self, request, pk):
         user = self.get_object(pk)
         user.is_active = False

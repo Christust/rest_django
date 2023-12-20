@@ -138,7 +138,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Custom
+# Custom Config
 
 AUTH_USER_MODEL = "users.User"
 
@@ -168,3 +168,11 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
+# Mails
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'user@gmail.com'
+EMAIL_HOST_PASSWORD = 'password app generated'
+EMAIL_USE_TLS = True
+

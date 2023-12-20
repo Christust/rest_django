@@ -8,9 +8,11 @@ from django.conf import settings
 class HasGroupPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         required_user_types = view.permission_types.get(view.action)
-        if request.user.is_anonymous:
+        if required_user_types == None:
+            return True
+        elif request.user.is_anonymous:
             return False
-        if required_user_types == None or request.user.user_type == "superadmin":
+        elif request.user.user_type == "superadmin":
             return True
         else:
             return request.user.user_type in required_user_types

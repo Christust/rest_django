@@ -46,6 +46,13 @@ class PasswordSerializer(serializers.Serializer):
             )
         return data
 
+class FileGetSerializer(serializers.Serializer):
+    object_name = serializers.CharField(max_length=200, min_length=5)
+
+class FileCreateSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     pass
